@@ -32,7 +32,6 @@ router.get("/:email", async (req, res) => {
 //------------ add new user -----------------
 router.post("/", async (req, res) => {
   const { name, email, password } = req.body;
-  const hashed_pwd= await bcrypt(password)
   if (!name || !email || !password) {
     return res.status(400).json({
       success: false,
@@ -48,10 +47,12 @@ router.post("/", async (req, res) => {
     });
   }
 
+  const hashed_pwd= await bcrypt.hash(password,10)
+
   const newUser = new userModel({
     name,
     email,
-    hashed_pwd
+    password:hashed_pwd 
   });
 
   await newUser.save();
