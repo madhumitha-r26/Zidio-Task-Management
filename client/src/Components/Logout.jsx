@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
 
-function Logout() {
+const Logout = () => {
+
   return (
-    <div>Logout</div>
-  )
-}
+    <div>
+      <button className="btn btn-outline btn-primary">
+        Logout
+      </button>
+    </div>
+  );
+};
 
-export default Logout
+export default Logout;

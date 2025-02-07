@@ -1,38 +1,75 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink,useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import axios from 'axios'
 
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate=useNavigate()
+
+
+const handleSignUp=(e)=>{
+  e.preventDefault();
+  axios.post("http://localhost:5000/register",{name,email,password})
+  .then(result=>{
+    if(result.status==201){
+      console.log("registered successfully!")
+      navigate("/login")
+    }
+  })
+  .catch(err=>{
+    if(err.response && (err.response.status==400)){
+      window.alert("email already exists!")
+    }
+    else{
+      console.log(err)
+    }
+  })
+}
+
   return (
     <div>
-    <Navbar/>
-    <div className="mt-28">
-      <div>
-        <h1 className="text-center font-semibold text-4xl mb-4">REGISTER</h1>
-      </div>
-      <div className="flex justify-center items-center">
-        <div className="artboard phone-1 space-y-4">
-          <input
-            type="text"
-            placeholder="Enter Email"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <input
-            type="password"
-            placeholder="Enter New Password"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className="input input-bordered w-full max-w-xs"
-          />
-          <button className="btn btn-primary w-full hover:bg-primary">
-            Register
-          </button>
-          <p className="text-center">Already have an account? <NavLink to={"/login"} className='text-blue-600'>Login</NavLink> </p>
+      <Navbar />
+      <div className="mt-28">
+        <div>
+          <h1 className="text-center font-semibold text-4xl mb-4">REGISTER</h1>
         </div>
-      </div>
+        <form className="flex justify-center items-center" onSubmit={handleSignUp}>
+          <div className="artboard phone-1 space-y-4">
+            <input
+              type="text"
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter Name"
+              className="input input-bordered w-full max-w-xs"
+            />
+            <input
+              type="email"
+              name="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter Email"
+              className="input input-bordered w-full max-w-xs"
+            />
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter Password"
+              className="input input-bordered w-full max-w-xs"
+            />
+            <button className="btn btn-primary w-full hover:bg-primary">
+              Register
+            </button>
+            <p className="text-center">
+              Already have an account?{" "}
+              <NavLink to={"/login"} className="text-blue-600">
+                Login
+              </NavLink>{" "}
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
