@@ -14,7 +14,7 @@ function Navbar() {
     <nav className="navbar bg-base-100 p-4 shadow-md">
       <div className="flex-1">
         <NavLink to="/" className="text-xl font-semibold text-ghost">
-            My Task Maker
+            My Task Manager
         </NavLink>
       </div>
 

@@ -14,7 +14,7 @@ function Home() {
       <Navbar/>
       <div className="pt-8 mt-12 md:pt-8 mt-8">
         <h1 className="text-2xl font-medium text-center italic">
-          My Task Maker 
+          My Task Manager 
         </h1>
       </div>
       <div className="pt-4 mt-4 flex items-center justify-center">
@@ -29,7 +29,7 @@ function Home() {
             </div>
             <div class="p-8">
               <p className="text-base text-justify">
-                My Task Maker is designed to simplify task organization
+                My Task Manager is designed to simplify task organization
                 and boost productivity. Users can easily create, edit, and
                 delete tasks while tracking their progress with status updates
                 such as Pending, In Progress, and Completed. With features like
@@ -41,7 +41,7 @@ function Home() {
                 ensures seamless task management to help users stay organized
                 and focused.
               </p>
-              <NavLink to={"/dashboard"}>
+              <NavLink to={"/register"}>
               <button className="btn btn-primary w-50 hover:bg-primary mt-4">
                 Get Started <ArrowForwardIcon/>
               </button>
@@ -56,7 +56,7 @@ function Home() {
       </div>
 
       <div className="flex items-center justify-center grid grid-cols-1 md:grid-cols-4 gap-2 m-4">
-        <div className="card bg-base-100 w-full border border-slate-600">
+        <div className="card bg-base-100 w-full">
           <figure className="px-10 pt-10">
             <img
               src={crt}
@@ -69,7 +69,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="card bg-base-100 w-full border border-slate-600">
+        <div className="card bg-base-100 w-full">
           <figure className="px-10 pt-10">
             <img
               src={sdd}
@@ -82,7 +82,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="card bg-base-100 w-full border border-slate-600">
+        <div className="card bg-base-100 w-full">
           <figure className="px-10 pt-10">
             <img
               src={cts}
@@ -95,7 +95,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="card bg-base-100 w-full border border-slate-700">
+        <div className="card bg-base-100 w-full">
           <figure className="px-10 pt-10">
             <img
               src={ts}

@@ -12,21 +12,23 @@ function Register() {
 
 const handleSignUp=(e)=>{
   e.preventDefault();
-  axios.post("http://localhost:5000/register",{name,email,password})
+  axios.post("http://localhost:5000/users/register", 
+    { name, email, password }, 
+    { withCredentials: true }
+  )
+  
   .then(result=>{
-    if(result.status==201){
-      console.log("registered successfully!")
+      console.log(result)
+      window.alert("Registered successfully!")
       navigate("/login")
-    }
   })
-  .catch(err=>{
-    if(err.response && (err.response.status==400)){
-      window.alert("email already exists!")
-    }
-    else{
+  .catch(err => {
+    if(err.response){
+      window.alert("User already exists!")
       console.log(err)
     }
-  })
+  });
+  
 }
 
   return (

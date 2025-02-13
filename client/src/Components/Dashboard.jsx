@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink,useLocation } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import Navbar from "./Navbar";
 
 function Dashboard() {
+
+  const location = useLocation();
+  const user = location.state?.user; 
+
   const [date, setDate] = useState(new Date());
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
@@ -11,6 +16,22 @@ function Dashboard() {
   const [dueDate, setDueDate] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
+
+  // ✅ Keep updating the time
+  useEffect(() => {
+    const timer = setInterval(() => setDate(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // ✅ Dark mode styles
+  const dark_styles = {
+    backgroundColor: "black",
+    color: "white",
+    minHeight: "100vh",
+    padding: "20px",
+  };
+
+    //------------------add-----------------
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,10 +57,12 @@ function Dashboard() {
     setDueDate("");
   };
 
+  //------------------delete-----------------
   const handleDelete = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
+  //------------------edit-----------------
   const handleEdit = (index) => {
     const task = tasks[index];
     setTitle(task.title);
@@ -62,45 +85,31 @@ function Dashboard() {
   };
 
   return (
-    <div>
-      <div className="navbar bg-base-100">
-        <div className="navbar-start">
-          <a className="bg-ghost text-xl font-bold">My Task Maker</a>
+    <div style={darkMode ? dark_styles : {}}>
+      {/* Navbar */}
+<Navbar/>
+
+      <div className="bg-transparent m-4">
+        <div className="flex justify-end">
+          <label className="flex cursor-pointer gap-2">
+            <input
+              type="checkbox"
+              value="night"
+              className="toggle theme-controller"
+              onChange={toggleTheme}
+              checked={darkMode}
+            />
+          </label>
         </div>
 
-        <div className="navbar-end">
-          <NavLink to={"/"}>
-            <button className="ml-4 btn btn-white hover:bg-white border-transparent">
-              Logout
-            </button>
-          </NavLink>
-        </div>
-      </div>
+        <h3 className="text-xl font-medium text-left">WELCOME {user && user.name}</h3>
 
-      <div>
-        <div className="bg-transparent m-4">
-          <div className="flex justify-end">
-            <label className="flex cursor-pointer gap-2">
-              <input
-                type="checkbox"
-                value="night"
-                className="toggle theme-controller"
-                onChange={toggleTheme}
-                checked={darkMode}
-              />
-            </label>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-medium text-left">WELCOME</h3>
-          </div>
-
-          <div className="mt-4">
-            <p className="text-right">{date.toString()}</p>
-          </div>
+        <div className="mt-4">
+          <p className="text-right">{date.toLocaleString()}</p>
         </div>
       </div>
 
+      {/* Task Form */}
       <div className="flex justify-center align-center">
         <form className="space-y-4 mx-8" onSubmit={handleSubmit}>
           <input
@@ -138,19 +147,19 @@ function Dashboard() {
 
       <h2 className="text-xl font-medium text-center m-4">MY TASKS</h2>
 
+      {/* Task List */}
       <div className="flex justify-center align-center m-8">
         <div className="overflow-x-auto">
           <table className="table">
             <thead>
               <tr>
-                <th> </th>
+                <th></th>
                 <th>Title</th>
                 <th>Description</th>
                 <th>Due Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
-
             <tbody>
               {tasks.map((task, index) => (
                 <tr key={index}>
@@ -164,15 +173,9 @@ function Dashboard() {
                       />
                     </label>
                   </th>
-                  <td className={task.completed ? "line-through" : ""}>
-                    {task.title}
-                  </td>
-                  <td className={task.completed ? "line-through" : ""}>
-                    {task.description}
-                  </td>
-                  <td className={task.completed ? "line-through" : ""}>
-                    {task.dueDate}
-                  </td>
+                  <td className={task.completed ? "line-through" : ""}>{task.title}</td>
+                  <td className={task.completed ? "line-through" : ""}>{task.description}</td>
+                  <td className={task.completed ? "line-through" : ""}>{task.dueDate}</td>
                   <td>
                     <button
                       className="btn bg-green-700 text-white hover:bg-green-600 border-transparent"
