@@ -27,6 +27,7 @@ function Login() {
     } catch (err) {
       if (err.response) {
         window.alert("Invalid credentials!");
+        navigate("/")
         console.log(err.response.data);
       } else {
         console.error("Login error:", err);
@@ -62,9 +63,7 @@ function Login() {
               required
               className="input input-bordered w-full max-w-xs"
             />
-            <p className="text-blue-600 text-xs text-right">
-              <NavLink to={"/forgotpassword"}>Forgot password</NavLink>
-            </p>
+          
 
             <button className="btn btn-primary w-full hover:bg-primary">
               Login

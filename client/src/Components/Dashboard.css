@@ -1,0 +1,4 @@
+.dark-theme input::placeholder,
+.dark-theme textarea::placeholder {
+  color: white;
+}

@@ -7,6 +7,7 @@ const userModel = require("../model/userModel");
 
 dotenv.config();
 
+
 // CORS Middleware
 router.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
@@ -22,47 +23,60 @@ router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
     console.log(name, email, password);
     
-    const existingUser = await userModel.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists!" });
+    const existingUser  = await userModel.findOne({ email });
+    if (existingUser ) {
+      return res.status(400).json({ error: "User  already exists!" });
     }
 
     const hashedPwd = await bcrypt.hash(password, 10);
-    const newUser = new userModel({ name, email, password: hashedPwd });
+    const newUser  = new userModel({ name, email, password: hashedPwd });
     await newUser.save();
 
-    return res.status(201).json({ message: "User registered!" });
+    return res.status(201).json({ message: "User  registered!" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
 // ---------------------------- Login ----------------------------
-router.post("/login", async (req, res) => {
+router.post("/login-user", async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log(email, password);
 
-    const existingUser = await userModel.findOne({ email });
-    if (!existingUser) {
+    const existingUser  = await userModel.findOne({ email });
+    if (!existingUser ) {
       return res.status(400).json({ error: "No user exists!" });
     }
 
-    const pwdMatch = await bcrypt.compare(password, existingUser.password);
+    const pwdMatch =  bcrypt.compare(password, existingUser .password);
     if (!pwdMatch) {
       return res.status(401).json({ success: false, message: "Password does not match" });
     }
 
     // Generate JWT Token
-    const token = jwt.sign({ name: existingUser.name }, process.env.KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ id: existingUser ._id, name: existingUser .name }, process.env.KEY, { expiresIn: "1h" });
 
     // Set Cookie Before Sending Response
-    res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
+    res.cookie("token", token, { httpOnly: true, maxAge: 3600000 }); // 1 hour
 
     return res.status(200).json({ success: true, message: "Login successful", token });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
+
+
+// ------------------------ Dashboard ---------------------------
+
+
+
+
+// ---------------------------- Logout ----------------------------
+router.post("/logout", (req, res) => {
+  res.clearCookie("token"); // Clear the cookie
+  return res.status(200).json({ message: "Logged out successfully" });
+});
+
 
 module.exports = router;

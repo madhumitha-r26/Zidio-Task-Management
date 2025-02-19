@@ -17,6 +17,6 @@ input:active{
   outline: 2px solid gray !important;
 }
 
-input::placeholder{
-  color: gray;
+input::placeholder, textarea::placeholder{
+  color: rgb(0, 0, 0);
 }

@@ -57,7 +57,7 @@ function Home() {
 
       <div className="flex items-center justify-center grid grid-cols-1 md:grid-cols-4 gap-2 m-4">
         <div className="card bg-base-100 w-full">
-          <figure className="px-10 pt-10">
+          <figure className="px-10 pt-10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
             <img
               src={crt}
               alt="new task creation"
@@ -70,7 +70,7 @@ function Home() {
         </div>
 
         <div className="card bg-base-100 w-full">
-          <figure className="px-10 pt-10">
+          <figure className="px-10 pt-10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
             <img
               src={sdd}
               alt="set due date"
@@ -78,12 +78,12 @@ function Home() {
             />
           </figure>
           <div className="card-body">
-            <h2 className="text-center text-xl not-italic">Set Due Date</h2>
+            <h2 className="text-center text-xl not-italic">Set Due Date and Priority</h2>
           </div>
         </div>
 
         <div className="card bg-base-100 w-full">
-          <figure className="px-10 pt-10">
+          <figure className="px-10 pt-10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
             <img
               src={cts}
               alt="change task status"
@@ -96,7 +96,7 @@ function Home() {
         </div>
 
         <div className="card bg-base-100 w-full">
-          <figure className="px-10 pt-10">
+          <figure className="px-10 pt-10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
             <img
               src={ts}
               alt="theme selection"

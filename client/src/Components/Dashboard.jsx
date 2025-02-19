@@ -1,73 +1,98 @@
 import React, { useEffect, useState } from "react";
-import { NavLink,useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import Navbar from "./Navbar";
+import DeleteIcon from '@mui/icons-material/Delete';
+import Logout from "./Logout";
+import './Dashboard.css'; // Import the CSS file
 
 function Dashboard() {
-
   const location = useLocation();
-  const user = location.state?.user; 
-
+  const [user, setUser ] = useState(null);
   const [date, setDate] = useState(new Date());
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
 
-  // ✅ Keep updating the time
+  // Fetch user data from the database
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/users/dashboard", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setUser (data.user);
+        } else {
+          console.error("Error fetching user data:", data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // Keep updating the time
   useEffect(() => {
     const timer = setInterval(() => setDate(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // ✅ Dark mode styles
+  // Dark mode styles
   const dark_styles = {
     backgroundColor: "black",
     color: "white",
     minHeight: "100vh",
-    padding: "20px",
+    padding: "0px 0px 20px 0px",
   };
 
-    //------------------add-----------------
-
+  // Add or update task
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!title.trim() || !description.trim() || !dueDate.trim()) {
-      alert("Enter Task!");
+      alert("Please enter all fields!");
       return;
     }
 
+    const newTask = { title, description, dueDate, priority, completed: false };
+
     if (editingIndex !== null) {
       const updatedTasks = tasks.map((task, index) =>
-        index === editingIndex
-          ? { title, description, dueDate, completed: task.completed }
-          : task
+        index === editingIndex ? { ...newTask, completed: task.completed } : task
       );
       setTasks(updatedTasks);
       setEditingIndex(null);
     } else {
-      setTasks([...tasks, { title, description, dueDate, completed: false }]);
+      setTasks([...tasks, newTask]);
     }
 
+    // Clear input fields
     setTitle("");
     setDescription("");
     setDueDate("");
+    setPriority("");
   };
 
-  //------------------delete-----------------
+  // Delete task
   const handleDelete = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  //------------------edit-----------------
+  // Edit task
   const handleEdit = (index) => {
     const task = tasks[index];
     setTitle(task.title);
     setDescription(task.description);
     setDueDate(task.dueDate);
+    setPriority(task.priority);
     setEditingIndex(index);
   };
 
@@ -84,10 +109,23 @@ function Dashboard() {
     );
   };
 
+  const getPriorityLabel = (priority) => {
+    switch (priority) {
+      case "1":
+        return "High";
+      case "2":
+        return "Medium";
+      case "3":
+        return "Low";
+      default:
+        return "None";
+    }
+  };
+
   return (
-    <div style={darkMode ? dark_styles : {}}>
+    <div className={darkMode ? "dark-theme" : ""} style={darkMode ? dark_styles : {}}>
       {/* Navbar */}
-<Navbar/>
+      <Logout />
 
       <div className="bg-transparent m-4">
         <div className="flex justify-end">
@@ -102,7 +140,9 @@ function Dashboard() {
           </label>
         </div>
 
-        <h3 className="text-xl font-medium text-left">WELCOME {user && user.name}</h3>
+        <h3 className="text-xl font-medium text-left">
+          WELCOME {user ? user.name : "Guest"}
+        </h3>
 
         <div className="mt-4">
           <p className="text-right">{date.toLocaleString()}</p>
@@ -131,6 +171,17 @@ function Dashboard() {
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
+          <select
+            className="select input-bordered w-full"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+          >
+            <option value="">Select Priority</option>
+            <option value="1">High</option>
+            <option value="2">Medium</option>
+            <option value="3">Low</option>
+          </select>
+
           <button className="btn btn-primary w-full hover:bg-primary">
             {editingIndex !== null ? (
               <>
@@ -157,6 +208,7 @@ function Dashboard() {
                 <th>Title</th>
                 <th>Description</th>
                 <th>Due Date</th>
+                <th>Priority</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -173,21 +225,32 @@ function Dashboard() {
                       />
                     </label>
                   </th>
-                  <td className={task.completed ? "line-through" : ""}>{task.title}</td>
-                  <td className={task.completed ? "line-through" : ""}>{task.description}</td>
-                  <td className={task.completed ? "line-through" : ""}>{task.dueDate}</td>
+                  <td className={task.completed ? "line-through" : ""}>
+                    {task.title}
+                  </td>
+                  <td className={task.completed ? "line-through" : ""}>
+                    {task.description}
+                  </td>
+                  <td className={task.completed ? "line-through" : ""}>
+                    {task.dueDate}
+                  </td>
+                  <td className={task.completed ? "line-through" : ""}>
+                    {getPriorityLabel(task.priority)}
+                  </td>
                   <td>
                     <button
                       className="btn bg-green-700 text-white hover:bg-green-600 border-transparent"
                       onClick={() => handleEdit(index)}
+                      aria-label="Edit Task"
                     >
-                      Edit
+                      <EditIcon /> Edit
                     </button>{" "}
                     <button
                       className="btn bg-red-700 text-white hover:bg-red-600 border-transparent"
                       onClick={() => handleDelete(index)}
+                      aria-label="Delete Task"
                     >
-                      Delete
+                      <DeleteIcon /> Delete
                     </button>{" "}
                   </td>
                 </tr>

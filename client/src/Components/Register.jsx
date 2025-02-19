@@ -14,7 +14,12 @@ const handleSignUp=(e)=>{
   e.preventDefault();
   axios.post("http://localhost:5000/users/register", 
     { name, email, password }, 
-    { withCredentials: true }
+    { withCredentials: true },
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
   )
   
   .then(result=>{
@@ -25,6 +30,7 @@ const handleSignUp=(e)=>{
   .catch(err => {
     if(err.response){
       window.alert("User already exists!")
+      navigate("/login")
       console.log(err)
     }
   });

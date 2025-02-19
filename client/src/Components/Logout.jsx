@@ -1,29 +1,36 @@
 import React from "react";
+import { NavLink,useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const setIsLoggedIn = useContext(SetIsLoggedInContext);
+
   const handleLogout = () => {
     axios
-      .post("http://localhost:5173/logout", {}, { withCredentials: true })
+      .post("http://localhost:5000/users/logout", {}, { withCredentials: true })
       .then((response) => {
         if (response.status === 200) {
-          setIsLoggedIn(false);
-          navigate("/"); //navigates to home page
+          navigate("/"); // Redirect to home page
         }
       })
-
       .catch((error) => {
-        console.error(error);
+        console.log("Logout failed:", error);
       });
   };
 
   return (
-    <div>
-      <button className="btn btn-outline btn-primary" onClick={handleLogout}>
-        Logout
-      </button>
+    <div className="navbar bg-base-100 w-full">
+    <div className="navbar-start">
+      <a className="bg-ghost text-xl font-bold">My Task Maker</a>
     </div>
+    <div className="navbar-end">
+      <NavLink to={"/"}>
+        <button className="btn btn-primary w-full hover:bg-primary" onClick={handleLogout}>
+          Logout
+        </button>
+      </NavLink>
+    </div>
+  </div>
   );
 };
 
