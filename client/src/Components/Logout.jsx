@@ -6,16 +6,9 @@ const Logout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    axios
-      .post("http://localhost:5000/users/logout", {}, { withCredentials: true })
-      .then((response) => {
-        if (response.status === 200) {
-          navigate("/"); // Redirect to home page
-        }
-      })
-      .catch((error) => {
-        console.log("Logout failed:", error);
-      });
+    window.localStorage.removeItem("token");
+    console.log("Logged out");
+    navigate("/login");
   };
 
   return (

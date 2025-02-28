@@ -4,39 +4,30 @@ import Navbar from "./Navbar";
 import axios from 'axios'
 
 function Register() {
+  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
-
-const handleSignUp=(e)=>{
-  e.preventDefault();
-  axios.post("http://localhost:5000/users/register", 
-    { name, email, password }, 
-    { withCredentials: true },
-    {
-      headers: {
-        'Content-Type': 'application/json'
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    axios.post("http://localhost:5000/users/register", 
+      { name, email, password }, 
+      { withCredentials: true }
+    )
+    .then(result => {
+      console.log(result);
+      window.alert("Registered successfully!");
+      navigate("/login");
+    })
+    .catch(err => {
+      if (err.response) {
+        window.alert("User already exists!");
+        navigate("/");
       }
-    }
-  )
-  
-  .then(result=>{
-      console.log(result)
-      window.alert("Registered successfully!")
-      navigate("/login")
-  })
-  .catch(err => {
-    if(err.response){
-      window.alert("User already exists!")
-      navigate("/login")
-      console.log(err)
-    }
-  });
-  
-}
-
+    });
+  };
   return (
     <div>
       <Navbar />

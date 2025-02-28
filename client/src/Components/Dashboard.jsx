@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,7 +8,8 @@ import './Dashboard.css'; // Import the CSS file
 
 function Dashboard() {
   const location = useLocation();
-  const [user, setUser ] = useState(null);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(location.state?.user || null);
   const [date, setDate] = useState(new Date());
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
@@ -18,27 +19,58 @@ function Dashboard() {
   const [darkMode, setDarkMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
 
-  // Fetch user data from the database
+  // Fetch tasks for the user
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch("/users/dashboard", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setUser (data.user);
-        } else {
-          console.error("Error fetching user data:", data.message);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (location.state && location.state.user) {
+      setUser(location.state.user);
+      console.log("User set from location state:", location.state.user);
+    }
 
-    fetchUser();
-  }, []);
+    const token = window.localStorage.getItem("token");
+    fetch("http://localhost:5000/users/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ token }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "ok") {
+          console.log("Logged in successfully");
+          window.localStorage.setItem("token", data.data);
+          setUser(data.user); // Assuming the user data is in data.user
+        } else {
+          console.log("Not logged in");
+        }
+      })
+      .catch((error) => {
+        console.error("Error verifying token:", error);
+      });
+  }, [location.state, navigate]);
+
+  useEffect(() => {
+    if (user && user.email) {
+      const fetchTasks = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/tasks/${user.email}`, {
+            method: "GET",
+            credentials: "include",
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setTasks(data);
+        } catch (error) {
+          console.error("Error fetching tasks:", error);
+        }
+      };
+
+      fetchTasks();
+    }
+  }, [user]);
 
   // Keep updating the time
   useEffect(() => {
@@ -55,23 +87,49 @@ function Dashboard() {
   };
 
   // Add or update task
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!title.trim() || !description.trim() || !dueDate.trim()) {
       alert("Please enter all fields!");
       return;
     }
 
-    const newTask = { title, description, dueDate, priority, completed: false };
+    const newTask = { title, description, dueDate, priority, completed: false, userEmail: user.email };
 
-    if (editingIndex !== null) {
-      const updatedTasks = tasks.map((task, index) =>
-        index === editingIndex ? { ...newTask, completed: task.completed } : task
-      );
-      setTasks(updatedTasks);
-      setEditingIndex(null);
-    } else {
-      setTasks([...tasks, newTask]);
+    try {
+      if (editingIndex !== null) {
+        const response = await fetch(`http://localhost:5000/tasks/${tasks[editingIndex]._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newTask),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const updatedTask = await response.json();
+        const updatedTasks = tasks.map((task, index) =>
+          index === editingIndex ? updatedTask : task
+        );
+        setTasks(updatedTasks);
+        setEditingIndex(null);
+      } else {
+        const response = await fetch("http://localhost:5000/tasks", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newTask),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const createdTask = await response.json();
+        setTasks([...tasks, createdTask]);
+      }
+    } catch (error) {
+      console.error("Error saving task:", error);
     }
 
     // Clear input fields
@@ -82,8 +140,18 @@ function Dashboard() {
   };
 
   // Delete task
-  const handleDelete = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+  const handleDelete = async (index) => {
+    try {
+      const response = await fetch(`http://localhost:5000/tasks/${tasks[index]._id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setTasks(tasks.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   // Edit task
@@ -101,12 +169,30 @@ function Dashboard() {
     document.body.classList.toggle("dark");
   };
 
-  const toggleTaskCompletion = (index) => {
-    setTasks(
-      tasks.map((task, i) =>
-        i === index ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const toggleTaskCompletion = async (index) => {
+    const task = tasks[index];
+    const updatedTask = { ...task, completed: !task.completed };
+
+    try {
+      const response = await fetch(`http://localhost:5000/tasks/${task._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const updatedTaskFromServer = await response.json();
+      setTasks(
+        tasks.map((task, i) =>
+          i === index ? updatedTaskFromServer : task
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling task completion:", error);
+    }
   };
 
   const getPriorityLabel = (priority) => {
@@ -140,8 +226,8 @@ function Dashboard() {
           </label>
         </div>
 
-        <h3 className="text-xl font-medium text-left">
-          WELCOME {user ? user.name : "Guest"}
+        <h3 className="text-xl font-medium text-left uppercase">
+        WELCOME {user && user.name ? user.name : "Guest"}
         </h3>
 
         <div className="mt-4">

@@ -21,20 +21,22 @@ function Login() {
       console.log(result);
 
       if (result.status === 200) {
-        // window.alert("Logged in successfully!");
+        window.localStorage.setItem("token", result.data.token);
         navigate("/dashboard");
+      } else {
+        window.alert("Login failed!");
+        console.log("Login failed:", result);
       }
     } catch (err) {
       if (err.response) {
         window.alert("Invalid credentials!");
-        navigate("/")
         console.log(err.response.data);
       } else {
         console.error("Login error:", err);
       }
+      navigate("/login");
     }
   };
-
   return (
     <div>
       <Navbar />
