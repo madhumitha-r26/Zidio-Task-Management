@@ -14,7 +14,7 @@ function Home() {
       <Navbar/>
       <div className="pt-8 mt-12 md:pt-8 mt-8">
         <h1 className="text-2xl font-medium text-center italic">
-          My Task Manager 
+          Zidio Task Management 
         </h1>
       </div>
       <div className="pt-4 mt-4 flex items-center justify-center">
@@ -29,7 +29,7 @@ function Home() {
             </div>
             <div class="p-8">
               <p className="text-base text-justify">
-                My Task Manager is designed to simplify task organization
+                Zidio Task Management is designed to simplify task organization
                 and boost productivity. Users can easily create, edit, and
                 delete tasks while tracking their progress with status updates
                 such as Pending, In Progress, and Completed. With features like
