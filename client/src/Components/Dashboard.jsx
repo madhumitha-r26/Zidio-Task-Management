@@ -4,13 +4,13 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Logout from "./Logout";
-import './Dashboard.css'; // Import the CSS file
+import './Dashboard.css'; 
 
 function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(location.state?.user || null);
-  const [date, setDate] = useState(new Date());
+  const [dateTime, setDateTime] = useState(new Date().toLocaleString());
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -72,9 +72,9 @@ function Dashboard() {
     }
   }, [user]);
 
-  // Keep updating the time
+  // Keep updating the date and time
   useEffect(() => {
-    const timer = setInterval(() => setDate(new Date()), 1000);
+    const timer = setInterval(() => setDateTime(new Date().toLocaleString()), 1000); // Update every second
     return () => clearInterval(timer);
   }, []);
 
@@ -89,7 +89,7 @@ function Dashboard() {
   // Add or update task
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!title.trim() || !description.trim() || !dueDate.trim()) {
+    if (!title.trim() || !description.trim() || !dueDate.trim() || !priority.trim()) {
       alert("Please enter all fields!");
       return;
     }
@@ -231,7 +231,7 @@ function Dashboard() {
         </h3>
 
         <div className="mt-4">
-          <p className="text-right">{date.toLocaleString()}</p>
+          <p className="text-right">{dateTime}</p>
         </div>
       </div>
 
@@ -271,7 +271,7 @@ function Dashboard() {
           <button className="btn btn-primary w-full hover:bg-primary">
             {editingIndex !== null ? (
               <>
-                <EditIcon /> Update Task
+                 Update Task
               </>
             ) : (
               <>
@@ -318,7 +318,7 @@ function Dashboard() {
                     {task.description}
                   </td>
                   <td className={task.completed ? "line-through" : ""}>
-                    {task.dueDate}
+                    {new Date(task.dueDate).toLocaleDateString()}
                   </td>
                   <td className={task.completed ? "line-through" : ""}>
                     {getPriorityLabel(task.priority)}

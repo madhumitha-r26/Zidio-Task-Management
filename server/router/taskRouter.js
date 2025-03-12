@@ -4,9 +4,9 @@ const router = express.Router();
 
 // Create Task
 router.post("/", async (req, res) => {
-  const { title, description, dueDate, userEmail } = req.body;
+  const { title, description, priority, dueDate, userEmail } = req.body;
   try {
-    const newTask = new taskModel({ title, description, dueDate, userEmail });
+    const newTask = new taskModel({ title, description, dueDate, priority, userEmail });
     await newTask.save();
     return res.status(201).json(newTask);
   } catch (error) {

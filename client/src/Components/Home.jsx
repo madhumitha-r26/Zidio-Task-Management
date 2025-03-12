@@ -55,7 +55,7 @@ function Home() {
         <h1 className="text-2xl font-medium text-center italic">Features</h1>
       </div>
 
-      <div className="flex items-center justify-center grid grid-cols-1 md:grid-cols-4 gap-2 m-4">
+      <div className="flex items-center justify-center grid grid-cols-2 md:grid-cols-4 gap-2 m-4">
         <div className="card bg-base-100 w-full">
           <figure className="px-10 pt-10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110">
             <img
