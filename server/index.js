@@ -31,7 +31,7 @@ app.options("*", (req, res) => {
 });
 
 
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(express.json());
 
 const userRouter = require("./router/userRouter");
@@ -41,7 +41,7 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
 app.get('/',(req,res)=>{
-  res.send("Zidio Task Management")
+  res.status(200).json({message:"Zidio Task Management"})
 })
 
 app.listen(process.env.PORT, () => {
