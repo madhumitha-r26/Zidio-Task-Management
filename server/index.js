@@ -26,7 +26,7 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
 app.get('/',(req,res)=>{
-  res.status(200).json({message:"Zidio Task Management"})
+  res.send("Zidio Task Management")
 })
 
 app.listen(process.env.PORT, () => {
