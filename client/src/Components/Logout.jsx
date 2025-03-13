@@ -14,7 +14,7 @@ const Logout = () => {
   return (
     <div className="navbar bg-base-100 w-full">
     <div className="navbar-start">
-      <a className="bg-ghost text-xl font-bold">My Task Maker</a>
+      <a className="bg-ghost text-xl font-bold">Zidio Task Management</a>
     </div>
     <div className="navbar-end">
       <NavLink to={"/"}>

@@ -10,7 +10,7 @@ DbConnection();
 dotenv.config();
 
 app.use(cors({
-  origin: "http://localhost:5173",  // Allow frontend URL
+  origin: "https://zidio-task-management-two.vercel.app",  // Allow frontend URL
   credentials: true,  // Allow credentials (cookies, sessions, etc.)
   methods: "GET,POST,PUT,DELETE", // Allow necessary HTTP methods
   allowedHeaders: "Content-Type,Authorization" // Allow headers
