@@ -10,22 +10,30 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: "https://zidio-task-management-two.vercel.app",
-  credentials: true,
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization"
-}));
+app.use(
+  cors({
+    origin: "https://zidio-task-management-two.vercel.app",
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://zidio-task-management-two.vercel.app");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://zidio-task-management-two.vercel.app"
+  );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
 app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "https://zidio-task-management-two.vercel.app");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://zidio-task-management-two.vercel.app"
+  );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.sendStatus(200);
@@ -40,8 +48,8 @@ const taskRouter = require("./router/taskRouter");
 app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
-app.get('/', (req, res) => {
-  res.status(200).json({ message: "Zidio Task Management" });
+app.get("/", (req, res) => {
+  return res.status(200).json({ message: "Zidio Task Management" });
 });
 
 app.listen(process.env.PORT, () => {
