@@ -11,9 +11,5 @@
         "src": "/(.*)",
         "dest": "./index.js"
       }
-    ],
-    "env": {
-      "MONGO_URI": "mongodb+srv://madhumitha:Madhu263@madhu.ugnzz.mongodb.net/task_management",
-      "JWT_SECRET": "abcde12345"
-    }
+    ]
   }
