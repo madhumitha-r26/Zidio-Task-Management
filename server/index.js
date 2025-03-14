@@ -41,7 +41,7 @@ const taskRouter = require("./router/taskRouter");
 app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
-app.get('https://zidio-task-management-serverside.vercel.app/',(req,res)=>{
+app.get('https://zidio-task-management-serverside.vercel.app',(req,res)=>{
   res.status(200).json({message:"Zidio Task Management"})
 })
 
