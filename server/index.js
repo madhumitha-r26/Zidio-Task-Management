@@ -34,8 +34,8 @@ app.options("*", (req, res) => {
 app.use(cookieParser());
 app.use(express.json());
 
-const userRouter = require("router/userRouter");
-const taskRouter = require("router/taskRouter");
+const userRouter = require("./router/userRouter");
+const taskRouter = require("./router/taskRouter");
 
 app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
