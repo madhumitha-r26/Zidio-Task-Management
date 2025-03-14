@@ -49,7 +49,8 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
 app.get("/", (req, res) => {
-  res.write("Zidio Task Management");
+  res.writeHead(200);
+  res.status(200).send("Zidio Task Management");
 });
 
 app.listen(process.env.PORT, () => {
