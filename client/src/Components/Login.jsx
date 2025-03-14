@@ -13,7 +13,7 @@ function Login() {
 
     try {
       const result = await axios.post(
-        "https://zidio-task-management-serverside.vercel.app/users/login",
+        "https://zidio-task-management-server.vercel.app/users/login",
         { email, password },
         { withCredentials: true }
       );
