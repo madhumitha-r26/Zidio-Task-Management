@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require("http");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -49,8 +50,14 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
 app.get("/", (req, res) => {
-  return res.status(200).json({ message: "Zidio Task Management" });
+  res.status(200).json({ message: "Zidio Task Management" });
 });
+
+http.createServer((req,res)=>{
+  res.writeHead(200,{'Content-Type':'text/plain'});
+  res.write('Zidio Task Management');
+  res.end();
+})
 
 app.listen(process.env.PORT, () => {
   console.log(`SERVER IS RUNNING ON PORT - ${process.env.PORT}`);
