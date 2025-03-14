@@ -2,25 +2,18 @@
     "version": 2,
     "builds": [
       {
-          "src": "*.js",
-          "use": "@vercel/node"
+        "src": "/index.js",
+        "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/"
+        "dest": "/index.js"
       }
     ],
-    "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "https://zidio-task-management-two.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
+    "env": {
+      "MONGO_URI": "mongodb+srv://madhumitha:Madhu263@madhu.ugnzz.mongodb.net/task_management",
+      "JWT_SECRET": "abcde12345"
     }
-  ]
   }

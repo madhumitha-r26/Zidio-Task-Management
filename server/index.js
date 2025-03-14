@@ -49,10 +49,11 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Zidio Task Management" });
+  res.write("Zidio Task Management");
 });
 
 app.listen(process.env.PORT, () => {
   console.log(`SERVER IS RUNNING ON PORT - ${process.env.PORT}`);
 });
 
+module.exports = app;
