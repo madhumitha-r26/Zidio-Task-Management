@@ -52,4 +52,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Zidio Task Management" });
 });
 
+app.listen(process.env.PORT, () => {
+  console.log(`SERVER IS RUNNING ON PORT - ${process.env.PORT}`);
+});
+
 module.exports = app;
