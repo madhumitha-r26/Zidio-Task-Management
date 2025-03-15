@@ -27,7 +27,7 @@ function Dashboard() {
     }
 
     const token = window.localStorage.getItem("token");
-    fetch("https://zidio-task-management-server.vercel.app/users/verify", {
+    fetch("http://localhost:5000/users/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +54,7 @@ function Dashboard() {
     if (user && user.email) {
       const fetchTasks = async () => {
         try {
-          const response = await fetch(`https://zidio-task-management-server.vercel.app/tasks/${user.email}`, {
+          const response = await fetch(`http://localhost:5000/tasks/${user.email}`, {
             method: "GET",
             credentials: "include",
           });
@@ -98,7 +98,7 @@ function Dashboard() {
 
     try {
       if (editingIndex !== null) {
-        const response = await fetch(`https://zidio-task-management-server.vercel.app/tasks/${tasks[editingIndex]._id}`, {
+        const response = await fetch(`http://localhost:5000/tasks/${tasks[editingIndex]._id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -115,7 +115,7 @@ function Dashboard() {
         setTasks(updatedTasks);
         setEditingIndex(null);
       } else {
-        const response = await fetch("https://zidio-task-management-server.vercel.app/tasks", {
+        const response = await fetch("http://localhost:5000/tasks", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -142,7 +142,7 @@ function Dashboard() {
   // Delete task
   const handleDelete = async (index) => {
     try {
-      const response = await fetch(`https://zidio-task-management-server.vercel.app/tasks/${tasks[index]._id}`, {
+      const response = await fetch(`http://localhost:5000/tasks/${tasks[index]._id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -174,7 +174,7 @@ function Dashboard() {
     const updatedTask = { ...task, completed: !task.completed };
 
     try {
-      const response = await fetch(`https://zidio-task-management-server.vercel.app/tasks/${task._id}`, {
+      const response = await fetch(`http://localhost:5000/tasks/${task._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
