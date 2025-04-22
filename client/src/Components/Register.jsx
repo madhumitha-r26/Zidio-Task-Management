@@ -12,7 +12,7 @@ function Register() {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:5000/users/register", 
+    axios.post("https://zidio-task-management-server.vercel.app/users/register", 
       { name, email, password }, 
       { withCredentials: true }
     )
