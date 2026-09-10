@@ -10,34 +10,15 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "https://zidio-task-management-server.vercel.app",
-    credentials: true,
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
 
-app.use((req, res, next) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://zidio-task-management-two.vercel.app"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+app.use(cors({
+  origin: ["https://zidio-task-management-two.vercel.app", "http://localhost:5173"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
-app.options("*", (req, res) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://zidio-task-management-two.vercel.app"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.sendStatus(200);
-});
+
 
 app.use(cookieParser());
 app.use(express.json());
@@ -53,6 +34,8 @@ app.get('/', (req, res) => {
   res.send("Zidio Task Management")
 })
 
-app.listen(process.env.PORT, () => {
-  console.log(`SERVER IS RUNNING ON PORT - ${process.env.PORT}`);
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`SERVER IS RUNNING ON PORT - ${PORT}`);
 });
