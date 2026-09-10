@@ -2,17 +2,15 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+dotenv.config();
 
 const DbConnection = require("./DbConnection");
-DbConnection();
-
-dotenv.config();
 
 const app = express();
 
 
 app.use(cors({
-  origin: ["https://zidio-task-management-two.vercel.app", "http://localhost:5173"],
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -23,6 +21,20 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send("Zidio Task Management");
+});
+
+app.use(async (req, res, next) => {
+  try {
+    await DbConnection();
+    next();
+  } catch (error) {
+    res.status(503).json({ error: "Database unavailable" });
+  }
+});
+
+
 const userRouter = require("./router/userRouter");
 const taskRouter = require("./router/taskRouter");
 
@@ -30,12 +42,13 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 
 
-app.get('/', (req, res) => {
-  res.send("Zidio Task Management")
-})
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`SERVER IS RUNNING ON PORT - ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`SERVER IS RUNNING ON PORT - ${PORT}`);
+  });
+}
+
+module.exports = app;
