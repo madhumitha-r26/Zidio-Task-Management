@@ -1,16 +1,29 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
+dotenv.config();
+
+let connectionPromise;
+
 function DbConnection() {
-  dotenv.config();
-  mongoose.connect(process.env.MONGO_URL);
+  if (!process.env.MONGO_URL) {
+    return Promise.reject(new Error("MONGO_URL is not configured"));
+  }
 
-  const db = mongoose.connection;
-  db.on("error", console.error.bind(console, "Connection Error"));
+  if (mongoose.connection.readyState === 1) {
+    return Promise.resolve();
+  }
 
-  db.once("open", function () {
-    console.log("DB CONNECTED!");
-  });
+  if (!connectionPromise) {
+    connectionPromise = mongoose.connect(process.env.MONGO_URL)
+      .then(() => console.log("DB CONNECTED!"))
+      .catch((error) => {
+        connectionPromise = undefined;
+        throw error;
+      });
+  }
+
+  return connectionPromise;
 }
 
 module.exports = DbConnection;
