@@ -11,8 +11,6 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-DbConnection()
-
 app.use(cors({
   origin: ["https://zidio-task-management-two.vercel.app", "http://localhost:5173"],
   credentials: true,
