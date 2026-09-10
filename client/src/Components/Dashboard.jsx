@@ -7,8 +7,8 @@ import Logout from "./Logout";
 import './Dashboard.css'; 
 
 
-const API_URL = import.meta.env.VITE_API_URL ||"https://zidio-task-management-two.vercel.app"
 
+const API_URL = import.meta.env.VITE_API_URL || "https://zidio-task-management-op3l.vercel.app";
 
 function Dashboard() {
   const location = useLocation();
@@ -31,7 +31,7 @@ function Dashboard() {
     }
 
     const token = window.localStorage.getItem("token");
-    fetch("https://zidio-task-management-server.vercel.app/users/verify", {
+    fetch(`${API_URL}/users/verify`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ function Dashboard() {
     if (user && user.email) {
       const fetchTasks = async () => {
         try {
-          const response = await fetch(`https://zidio-task-management-server.vercel.app/tasks/${user.email}`, {
+          const response = await fetch(`${API_URL}/tasks/${user.email}`, {
             method: "GET",
             credentials: "include",
           });

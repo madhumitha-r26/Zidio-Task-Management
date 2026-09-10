@@ -3,6 +3,8 @@ import { NavLink,useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || "https://zidio-task-management-op3l.vercel.app";
+
 function Register() {
   
   const [name, setName] = useState("");
@@ -12,7 +14,7 @@ function Register() {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    axios.post("https://zidio-task-management-server.vercel.app/users/register", 
+    axios.post(`${API_URL}/users/register`, 
       { name, email, password }, 
       { withCredentials: true }
     )

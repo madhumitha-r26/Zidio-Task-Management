@@ -7,23 +7,26 @@ dotenv.config();
 const DbConnection = require("./DbConnection");
 
 const app = express();
-
-
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
-
+DbConnection();
 
 
 app.use(cookieParser());
 app.use(express.json());
 
+
+app.use(cors({
+  origin: ["https://zidio-task-management-two.vercel.app", "http://localhost:5173"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+
+
 app.get('/', (req, res) => {
   res.send("Zidio Task Management");
 });
+
 
 app.use(async (req, res, next) => {
   try {
@@ -52,3 +55,6 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+
+

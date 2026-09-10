@@ -3,6 +3,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import axios from "axios";
 
+
+
+const API_URL = import.meta.env.VITE_API_URL || "https://zidio-task-management-op3l.vercel.app";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +17,7 @@ function Login() {
 
     try {
       const result = await axios.post(
-        "https://zidio-task-management-server.vercel.app/users/login",
+        `${API_URL}/users/login`,
         { email, password },
         { withCredentials: true }
       );
