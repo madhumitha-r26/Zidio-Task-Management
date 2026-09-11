@@ -43,10 +43,10 @@ function Dashboard() {
       .then((data) => {
         if (data.status === "ok") {
           console.log("Logged in successfully");
-          window.localStorage.setItem("token", data.data);
-          setUser(data.user); // Assuming the user data is in data.user
+          setUser(data.user);
         } else {
           console.log("Not logged in");
+          setUser(null);
         }
       })
       .catch((error) => {
@@ -58,10 +58,13 @@ function Dashboard() {
     if (user && user.email) {
       const fetchTasks = async () => {
         try {
-          const response = await fetch(`${API_URL}/tasks/${user.email}`, {
-            method: "GET",
-            credentials: "include",
-          });
+          const response = await fetch(
+            `${API_URL}/tasks/${encodeURIComponent(user.email)}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -119,7 +122,7 @@ function Dashboard() {
         setTasks(updatedTasks);
         setEditingIndex(null);
       } else {
-        const response = await fetch("${API_URL}/tasks", {
+        const response = await fetch(`${API_URL}/tasks`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
